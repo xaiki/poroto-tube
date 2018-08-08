@@ -27,10 +27,13 @@ export default class Search extends React.PureComponent {
     console.error('senadores', senadores)
     if (!senadores.length) {
       GSheet(gdid, 0, 200)
-        .then(senadores => store.setItem(storageKey, JSON.stringify(senadores)))
+        .then(senadores => {
+          store.setItem(storageKey, JSON.stringify(senadores))
+          this.setState({
+            senadores
+          })
+        })
     }
-
-    const onMessage = 
 
     this.ws = new WS(WS_HOST)
     this.ws.onerror = err => console.error(err)

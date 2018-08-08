@@ -95,9 +95,16 @@ class Home extends React.PureComponent {
       now: -1
     }
 
+    console.error('senadores', senadores)
     if (!senadores.length) {
+      console.error('getting from network')
       GSheet(gdid, 0, 200)
-        .then(senadores => store.setItem(storageKey, JSON.stringify(senadores)))
+             .then(senadores => {
+               store.setItem(storageKey, JSON.stringify(senadores))
+               this.setState({
+                 senadores
+               })
+             })
     }
   }
 
