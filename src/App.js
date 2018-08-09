@@ -44,7 +44,7 @@ const vote2Class = {
   'No confirmado': 'noconfirmado',
   'Se Abstiene': 'abstencion'
 }
-const Twitter = ({t}) => {
+const Twitter = ({t = ''}) => {
   const twitter = t.replace(/^@/, '')
   return (
     <a href={`https://twitter.com/${twitter}`}>🐤{t}</a>
