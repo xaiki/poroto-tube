@@ -35,22 +35,29 @@ export default class Search extends React.PureComponent {
         })
     }
 
-    this.loadWS()
-    this.tick = setInterval(() => this.ws.send('ping'))
+    this.loadWS('selected')
   }
 
-  loadWS() {
+  loadWS(stateKey) {
+    console.log('open WS')
+    if (this.ws && this.ws._tick) {
+      clearInterval(this.ws._tick)
+    }
     this.ws = new WS(WS_HOST)
     this.ws.onerror = err => console.error(err)
     this.ws.onmessage = data => {
       console.error(data)
       this.setState({
-        now: parseInt(data.data, 10)
+        [stateKey]: parseInt(data.data, 10)
       })
     }
     this.ws.onclose = () => this.loadWS()
-  }
+    this.ws.onopen = () => {
+      console.log('WS opened')
+      this.ws._tick = setInterval(() =>  (this.ws.readyState === WebSocket.OPEN) && this.ws.send('ping'))
+    }
 
+  }
 
   setSenador (i) {
     this.ws.send(JSON.stringify({
