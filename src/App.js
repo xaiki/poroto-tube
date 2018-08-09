@@ -80,15 +80,7 @@ class Home extends React.PureComponent {
   constructor(props){
     super(props)
 
-    this.ws = new WS(WS_HOST)
-    this.ws.onerror = err => console.error(err)
-    this.ws.onmessage = data => {
-      console.error(data)
-      this.setState({
-        now: parseInt(data.data, 10)
-      })
-    }
-
+    this.loadWS()
     this.tick = setInterval(() => this.ws.send('ping'))
 
     const senadores = JSON.parse(store.getItem(storageKey) || '[]')
@@ -108,6 +100,18 @@ class Home extends React.PureComponent {
                })
              })
     }
+  }
+
+  loadWS() {
+    this.ws = new WS(WS_HOST)
+    this.ws.onerror = err => console.error(err)
+    this.ws.onmessage = data => {
+      console.error(data)
+      this.setState({
+        now: parseInt(data.data, 10)
+      })
+    }
+    this.ws.onclose = () => this.loadWS()
   }
 
   render() {
