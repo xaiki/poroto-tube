@@ -7,13 +7,9 @@ import day from './day'
 import logo from './logos/ecofeminita.png'
 import './App.css'
 import store from './store'
+import WS from './ws'
 
 import { storageKey, ytid, gdid, WS_HOST } from './constants'
-
-let WS = WebSocket
-if (typeof WS === 'undefined' || WS=== null) {
-  WS = require('ws')
-}
 
 let loc = window.location
 
@@ -79,7 +75,8 @@ const Senador = (s) => (
 class Home extends React.PureComponent {
   constructor(props){
     super(props)
-    this.loadWS('now')
+    this.ws = new WS(WS_HOST)
+    this.ws.on('message', now => this.setState({now: now.data}))
 
     const senadores = JSON.parse(store.getItem(storageKey) || '[]')
     this.state = {
@@ -116,7 +113,6 @@ class Home extends React.PureComponent {
     this.ws.onclose = () => this.loadWS()
     this.ws.onopen = () => {
       console.log('WS opened')
-      this.ws._tick = setInterval(() =>  (this.ws.readyState === WebSocket.OPEN) && this.ws.send('ping'))
     }
 
   }

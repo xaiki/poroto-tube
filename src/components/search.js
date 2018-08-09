@@ -2,12 +2,8 @@ import React from 'react'
 
 import GSheet from '../picosheet'
 import store from '../store'
+import WS from '../ws'
 import { storageKey, gdid, WS_HOST } from '../constants'
-
-let WS = WebSocket
-if (typeof WS === 'undefined' || WS=== null) {
-  WS = require('ws')
-}
 
 const Senador = ({i, Senador, onClick}) => (
   <span key={i} onClick={() => onClick(i)}>{i} — {Senador}</span>
@@ -24,7 +20,9 @@ export default class Search extends React.PureComponent {
       selected: -1
     }
 
-    console.error('senadores', senadores)
+    this.ws = new WS(WS_HOST)
+    this.ws.on('message', selected => this.setState({selected: selected.data}))
+
     if (!senadores.length) {
       GSheet(gdid, 0, 200)
         .then(senadores => {
@@ -34,36 +32,13 @@ export default class Search extends React.PureComponent {
           })
         })
     }
-
-    this.loadWS('selected')
-  }
-
-  loadWS(stateKey) {
-    console.log('open WS')
-    if (this.ws && this.ws._tick) {
-      clearInterval(this.ws._tick)
-    }
-    this.ws = new WS(WS_HOST)
-    this.ws.onerror = err => console.error(err)
-    this.ws.onmessage = data => {
-      console.error(data)
-      this.setState({
-        [stateKey]: parseInt(data.data, 10)
-      })
-    }
-    this.ws.onclose = () => this.loadWS()
-    this.ws.onopen = () => {
-      console.log('WS opened')
-      this.ws._tick = setInterval(() =>  (this.ws.readyState === WebSocket.OPEN) && this.ws.send('ping'))
-    }
-
   }
 
   setSenador (i) {
-    this.ws.send(JSON.stringify({
+    this.ws.send({
       key: this.state.key,
       payload: i
-    }))
+    })
   }
 
   setKey (e) {
