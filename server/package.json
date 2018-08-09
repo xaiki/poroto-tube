@@ -1,0 +1,19 @@
+{
+  "name": "videosock",
+  "version": "0.0.1",
+  "description": "A simple twitter to socket.io proxy",
+  "main": "index.js",
+  "repository": "https://github.com/xaiki/tweetsock",
+  "author": "Niv Sardi <x@btn.sh>",
+  "license": "AGPL3",
+  "dependencies": {
+    "debug": "^3.1.0",
+    "ws": "^6.0.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "now": {
+    "alias": "videosock.now.sh"
+  }
+}
