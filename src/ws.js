@@ -20,7 +20,7 @@ export default class WS extends EventEmitter {
         this.ws.onmessage = data => {
             this.emit('message', data)
         }
-        this.ws.onclose = () => this.loadWS()
+        this.ws.onclose = () => this.open(url)
         this.ws.onopen = () => {
             this.connecting = false
             this.ws._tick = setInterval(() => this.send('ping'))
