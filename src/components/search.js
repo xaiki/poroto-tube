@@ -42,6 +42,7 @@ export default class Search extends React.PureComponent {
         selected: parseInt(data.data, 10)
       })
     }
+    this.tick = setInterval(() => this.ws.send('ping'))
   }
 
   setSenador (i) {

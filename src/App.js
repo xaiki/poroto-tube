@@ -89,6 +89,8 @@ class Home extends React.PureComponent {
       })
     }
 
+    this.tick = setInterval(() => this.ws.send('ping'))
+
     const senadores = JSON.parse(store.getItem(storageKey) || '[]')
     this.state = {
       senadores: senadores,
@@ -116,7 +118,6 @@ class Home extends React.PureComponent {
     return (
     <div className='app'>
         <YouTube videoId={ytid} playerVars={{autoplay: true}} className='player'/>
-        <img src={logo} className='logo'/>
         {nowSpeaking ? <Senador {...nowSpeaking}/> : <p>cargando</p>}
     </div>
     );
