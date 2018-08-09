@@ -30,6 +30,12 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(s) {
     try {
       debug('got message')
+      if (typeof s === 'string') {
+        if (s === 'ping' && client.readyState === WebSocket.OPEN)
+          return client.send('pong')
+        return
+      }
+
       const data = JSON.parse(s)
       if (data.key !== cfg.secret) {
         debug('wrong password:', data.key, data)
