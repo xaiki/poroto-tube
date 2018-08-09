@@ -4,6 +4,7 @@ const WebSocket = window.WebSocket
 export default class WS extends EventEmitter {
     constructor (url) {
         super()
+        this.backoff = 200
         this.connecting = false
         this.queue = []
         if (url) this.open(url)
@@ -16,12 +17,17 @@ export default class WS extends EventEmitter {
             clearInterval(this._tick)
         }
         this.ws = new WebSocket(url)
-        this.ws.onerror = err => console.error(err)
+        this.ws.onerror = err => {
+            console.error(err)
+            setTimeout(() => this.open(url), this.backoff)
+            this.backoff *= 2
+        }
         this.ws.onmessage = data => {
             this.emit('message', data)
         }
         this.ws.onclose = () => this.open(url)
         this.ws.onopen = () => {
+            this.backoff = 200
             this.connecting = false
             this.ws._tick = setInterval(() => this.send('ping'))
         }
