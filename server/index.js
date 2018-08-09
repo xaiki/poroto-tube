@@ -8,7 +8,7 @@ var cfg = {}
 try {
   cfg = require('../config');
 } catch (e) {
-  console.log('no config defaulting to env vars', e)
+  console.log('no config defaulting to env vars')
 }
 
 if (process.env.VIDEO_SOCK_SECRET)
@@ -26,8 +26,10 @@ wss.broadcast = function broadcast(data) {
 };
 
 wss.on('connection', function connection(ws) {
+  debug('connection')
   ws.send(payload)
   ws.on('message', function incoming(s) {
+    debug('message', s)
     try {
       debug('got message')
       if (typeof s === 'string') {
