@@ -30,6 +30,11 @@ export default class WS extends EventEmitter {
             this.backoff = 200
             this.connecting = false
             this.ws._tick = setInterval(() => this.send('ping'))
+            if (this.queue.length) {
+                while (this.queue.length) {
+                    this.send(this.queue.shift())
+                }
+            }
         }
     }
 
@@ -37,7 +42,7 @@ export default class WS extends EventEmitter {
         if (this.ws.readyState !== WebSocket.OPEN) {
             if (! this.connecting && this.url)
                 this.open(this.url)
-            return this.queue(data)
+            return this.queue.push(data)
         }
         if (typeof data === 'string') return this.ws.send(data)
         return this.ws.send(JSON.stringify(data))
