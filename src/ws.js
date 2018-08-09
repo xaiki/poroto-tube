@@ -42,6 +42,8 @@ export default class WS extends EventEmitter {
         if (this.ws.readyState !== WebSocket.OPEN) {
             if (! this.connecting && this.url)
                 this.open(this.url)
+            if (data === 'ping')
+                return
             return this.queue.push(data)
         }
         if (typeof data === 'string') return this.ws.send(data)
