@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-const URL = process.env.VIDEOSOCK_URL || 'ws://videosock.now.sh'
+const URL = process.env.VIDEOSOCK_URL || 'wss://xaiki.net/poroto/tube'
 const ws = new WebSocket(URL);
 
 const payload = process.argv.pop()
