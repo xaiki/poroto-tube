@@ -33,8 +33,8 @@ wss.on('connection', function connection(ws) {
     try {
       debug('got message')
       if (typeof s === 'string') {
-        if (s === 'ping' && client.readyState === WebSocket.OPEN)
-          return client.send('pong')
+        if (s === 'ping' && ws.readyState === WebSocket.OPEN)
+          return ws.send('pong')
         return
       }
 
